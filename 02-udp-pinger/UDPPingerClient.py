@@ -16,7 +16,9 @@ packets_lost = 0
 
 for seq in range(1, 11):
     send_time = time.time()
-    message = f"Ping {seq} {send_time}"
+    label_time = time.localtime(send_time)
+
+    message = f"Ping {seq} {time.strftime('%H:%M:%S', label_time)}"
 
     try:
         # Enviar mensagem para o servidor
@@ -26,16 +28,16 @@ for seq in range(1, 11):
         data, addr = clientSocket.recvfrom(1024)
 
         # Calcular o RTT (tempo ida e volta)
-        rtt = time.time() - send_time
+        rtt = (time.time() - send_time) * 1000
         
         # Armazenar RTT para estatísticas
         rtts.append(rtt)
 
         print(f"Resposta: {data.decode()}")
-        print(f"Tempo de ida e volta (RTT): {rtt:.6f} segundos\n")
+        print(f"Tempo de ida e volta (RTT): {rtt:.3f} ms\n")
 
     except socket.timeout:
-        print("Request timed out")
+        print("Request timed out\n")
         packets_lost += 1
 
 # Fechar o socket após o término
@@ -55,7 +57,7 @@ else:
 loss_rate = (packets_lost / 10) * 100
 
 print("\n***Estatísticas de Ping***")
-print(f"RTT mínimo: {min_rtt:.6f} segundos")
-print(f"RTT máximo: {max_rtt:.6f} segundos")
-print(f"RTT médio: {avg_rtt:.6f} segundos")
+print(f"RTT mínimo: {min_rtt:.3f} ms")
+print(f"RTT máximo: {max_rtt:.3f} ms")
+print(f"RTT médio: {avg_rtt:.3f} ms")
 print(f"Taxa de perda de pacotes: {loss_rate:.2f}%")

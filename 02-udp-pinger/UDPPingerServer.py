@@ -10,17 +10,20 @@ serverSocket = socket(AF_INET, SOCK_DGRAM)
 serverSocket.bind(('', 12000))
 
 while True:
-    # Gerar número aleatório entre 0 e 10
-    rand = random.randint(0, 10)
+    # Gerar número aleatório entre 1 e 10
+    rand = random.randint(1, 10)
 
     # Receber o pacote do cliente junto com o endereço de origem
     message, address = serverSocket.recvfrom(1024)
+
+
+    print(f"O endereço {address} enviou a mensagem: {message.decode('utf-8')}\n")
 
     # Colocar a mensagem em maiúsculas
     message = message.upper()
 
     # Se o número rand for menor que 4, consideramos que o pacote foi perdido e não respondemos
-    if rand < 4:
+    if rand <= 4:
         continue
     
     # Caso contrário, o servidor responde

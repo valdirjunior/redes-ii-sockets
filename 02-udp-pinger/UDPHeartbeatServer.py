@@ -3,7 +3,7 @@ import time
 from threading import Thread, Lock
 
 UDP_PORT = 12001  # Porta para o serviço de heartbeat
-HEARTBEAT_TIMEOUT = 15  # Tempo em segundos para considerar a perda do heartbeat
+HEARTBEAT_TIMEOUT = 10  # Tempo em segundos para considerar a perda do heartbeat
 
 heartbeats = {}  # Dicionário para armazenar os últimos tempos de heartbeat por cliente
 lock = Lock()  # Para proteger o acesso ao dicionário de heartbeats

@@ -4,20 +4,20 @@ import base64
 import os
 
 # ==== CONFIGURAÇÕES ====
-smtp_server = 'smtp.gmail.com'
+smtp_server = 'smtp.gmail.com' # Servidor de email
 smtp_port = 587  # Porta para STARTTLS
-meu_email = 'valdirrugiskijr@gmail.com'
-senha_app = 'mbmd ajap ipvb iozh'
+meu_email = 'valdirrugiskijr@gmail.com' # Meu email
+senha_app = 'mbmd ajap ipvb iozh' # Senha de app gerada
 # destinatario = 'matheuswogt10@gmail.com'
 # destinatario = 'paulosergiopierdona@gmail.com'
 # destinatario = 'wesleylmb@gmail.com'
 destinatario = 'valdirrugiskijr@gmail.com'
 imagem_path = 'rede-computadores.png'
 
-def log_envio(msg):
+def log_envio(msg): # Print do envio
     print(">> Enviando:", msg.strip())
 
-def log_recebido(resp):
+def log_recebido(resp): # Print da resposta
     resp = resp.replace('\r\n', '\n')
     print("<< Resposta:", resp.strip())
     print("-"*50)
@@ -131,7 +131,6 @@ log_recebido(cliente_ssl.recv(1024).decode()) # Esperado: 250 OK
 log_envio('QUIT')
 cliente_ssl.send(b'QUIT\r\n')
 log_recebido(cliente_ssl.recv(1024).decode()) # Esperado: 221
-
 
 # ==== FECHA O SOCKET ====
 print("Sessão encerrada, socket fechado.")
