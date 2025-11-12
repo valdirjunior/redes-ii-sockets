@@ -15,10 +15,10 @@ rtts = []
 packets_lost = 0
 
 for seq in range(1, 11):
-    send_time = time.time()
-    label_time = time.localtime(send_time)
+    send_time = time.time() # Tempo de disparo do ping(em segundos, unix timestamp)
+    label_time = time.localtime(send_time) # Converter para tempo legível
 
-    message = f"Ping {seq} {time.strftime('%H:%M:%S', label_time)}"
+    message = f"Ping {seq} {time.strftime('%H:%M:%S', label_time)}" 
 
     try:
         # Enviar mensagem para o servidor
@@ -28,7 +28,7 @@ for seq in range(1, 11):
         data, addr = clientSocket.recvfrom(1024)
 
         # Calcular o RTT (tempo ida e volta)
-        rtt = (time.time() - send_time) * 1000
+        rtt = (time.time() - send_time) * 1000 # Converter para milissegundos
         
         # Armazenar RTT para estatísticas
         rtts.append(rtt)

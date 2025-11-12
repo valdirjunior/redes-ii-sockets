@@ -7,7 +7,7 @@ from socket import *
 serverSocket = socket(AF_INET, SOCK_DGRAM)
 
 # Atribuir endereço IP e número da porta ao socket
-serverSocket.bind(('', 12000))
+serverSocket.bind(('', 12000)) # Bind para todas as interfaces('0.0.0.0' é o mesmo que '') na porta 12000
 
 while True:
     # Gerar número aleatório entre 1 e 10

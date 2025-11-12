@@ -2,7 +2,7 @@ import socket
 import time
 import random
 
-clientSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Criar um socket UDP IPv4
+clientSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Cria um socket UDP IPv4
 serverAddress = ('127.0.0.1', 12001)  # Porta diferente do Ping para este serviço
 
 try:
