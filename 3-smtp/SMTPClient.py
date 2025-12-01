@@ -49,7 +49,7 @@ recv = clientSocket.recv(1024).decode()
 tratar_erro(recv, '250', 'EHLO pré-TLS') # 250 = Ação solicitada concluída
 
 # ==== NEGOCIAÇÃO DE TLS ====
-log_envio(starttls := 'STARTTLS\r\n')
+log_envio(starttls := 'STARTTLS\r\n') # TLS = Transport Layer Security , SSL = Secure Sockets Layer
 clientSocket.send(starttls.encode())
 recv = clientSocket.recv(1024).decode()
 tratar_erro(recv, '220', 'STARTTLS') # 220 = Serviço pronto para iniciar TLS

@@ -6,31 +6,29 @@ import time
 import select
 import socket
 
-ICMP_ECHO_REQUEST = 8
+ICMP_ECHO_REQUEST = 8 # Tipo de mensagem ICMP para Echo Request
 
+# def get_my_ip():
+#     auxSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#     try:
+#         auxSocket.connect(('8.8.8.8', 80))
+#         ip = auxSocket.getsockname()[0]
+#     except Exception:
+#         ip = '127.0.0.1'
+#     finally:
+#         auxSocket.close()
+#     return ip
 
-def get_my_ip():
-    auxSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        auxSocket.connect(('8.8.8.8', 80))
-        ip = auxSocket.getsockname()[0]
-    except Exception:
-        ip = '127.0.0.1'
-    finally:
-        auxSocket.close()
-    return ip
+# def create_false_ip():
+#     my_ip = get_my_ip()
+#     print('Meu IP: ', my_ip)
+#     # monta um IP falso variando o último octeto
+#     ip_parts = my_ip.split('.')
+#     false_ip = '.'.join(ip_parts[:-1]+['254'])  # se não estiver em uso
+#     print('IP falso: ', false_ip)
+#     return false_ip
 
-def create_false_ip():
-    my_ip = get_my_ip()
-    print('Meu IP: ', my_ip)
-    # monte um IP "falso" variando o último octeto
-    ip_parts = my_ip.split('.')
-    false_ip = '.'.join(ip_parts[:-1]+['254'])  # se não estiver em uso
-    print('IP falso: ', false_ip)
-    return false_ip
-
-
-
+# FUNÇÃO DE CHECKSUM
 def checksum(data):
     csum = 0
     countTo = (len(data) // 2) * 2
@@ -99,14 +97,14 @@ def sendOnePing(mySocket, destAddr, ID):
     myChecksum = 0 
 
     # Make a dummy header with a 0 checksum
-    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
-    data = struct.pack("d", time.time())
+    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1) # Monta o cabeçalho com checksum 0
+    data = struct.pack("d", time.time()) # Dados do pacote (timestamp)
     
     # Calculate the checksum on the data and the dummy header.
-    myChecksum = checksum(header + data)
+    myChecksum = checksum(header + data) # Checksum é calculado sobre o cabeçalho e os dados para garantir integridade dos pacotes
 
     # Get the right checksum, and put in the header
-    if sys.platform == 'darwin':
+    if sys.platform == 'darwin':    
         myChecksum = htons(myChecksum) & 0xffff
     else:
         myChecksum = htons(myChecksum)
@@ -114,28 +112,28 @@ def sendOnePing(mySocket, destAddr, ID):
     header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
     packet = header + data
 
-    mySocket.sendto(packet, (destAddr, 1)) # AF_INET address must be tuple, not str
+    mySocket.sendto(packet, (destAddr, 1)) # Endereço do AF_INET é uma tupla (host, port), porta é irrelevante para ICMP
 
+# FUNÇÃO DE PING – ENVIA E RECEBE UM PACOTE
 def doOnePing(destAddr, timeout):
-    icmp = getprotobyname("icmp")
-    mySocket = socket.socket(socket.AF_INET, socket.SOCK_RAW, icmp)
+    icmp = getprotobyname("icmp") # Busca o número do protocolo ICMP
+    mySocket = socket.socket(socket.AF_INET, socket.SOCK_RAW, icmp) # Cria o socket RAW ICMP, para acesso de baixo nível, direcionado ao protocolo ICMP, na camada de rede
 
-    myID = os.getpid() & 0xFFFF # Return the current process id
-    sendOnePing(mySocket, destAddr, myID)
-    result = receiveOnePing(mySocket, myID, timeout, destAddr)
+    myID = os.getpid() & 0xFFFF # Retorna o ID do processo atual
+    sendOnePing(mySocket, destAddr, myID) # Envia o pacote
+    result = receiveOnePing(mySocket, myID, timeout, destAddr) # Recebe o pacote
     
     mySocket.close()
     return result
 
-# FUNÇÃO PRINCIPAL – ESTATÍSTICAS
-
+# FUNÇÃO LOOP PRINCIPAL – ESTATÍSTICAS
 def ping(host, timeout=1, count=4):
     dest = gethostbyname(host)
-    print(f'Pingando {dest} usando Python:')
+    print(f'Pingando para {dest}:')
     rtts = []
     perdas = 0
     for i in range(count):
-        rtt, error = doOnePing(dest, timeout)
+        rtt, error = doOnePing(dest, timeout) # envia e recebe um ping
         if rtt is not None:
             print(f'Resposta de {dest}: time={rtt:.2f}ms')
             rtts.append(rtt)
@@ -155,20 +153,22 @@ if __name__ == "__main__":
     ping('127.0.0.1')
 
     print("--- América do Sul ---")
-    ping('168.197.252.10')
+    ping('168.197.252.10') # UFRJ - Rio de Janeiro, Brasil
 
     print("\n--- América do Norte ---")
-    ping('8.8.8.8')
+    ping('8.8.8.8') # Google DNS - EUA
 
     print("\n--- Europa ---")
-    ping('1.1.1.1')
+    ping('1.1.1.1') # Cloudflare DNS - Irlanda
 
     print("\n--- Ásia ---")
-    ping('210.129.145.150')
+    ping('210.129.145.150') # Universidade de Tóquio, Japão
 
     print("\n--- África ---")
-    ping('196.10.53.74')
+    ping('196.10.53.74') # Universidade de Pretória, África do Sul
 
-    print("\n--- IP Falso ---")
-    ping(false_ip := create_false_ip())
+    print("\n--- Oceania ---")
+    ping('139.130.4.5') # Universidade de Sydney, Austrália
 
+    # print("\n--- IP Falso ---")
+    # ping(false_ip := create_false_ip()) # IP falso para testar resposta de destino inalcançável
