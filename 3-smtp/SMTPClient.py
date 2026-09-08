@@ -7,7 +7,7 @@ import os
 smtp_server = 'smtp.gmail.com' # Servidor de email
 smtp_port = 587  # Porta para STARTTLS
 meu_email = 'valdirrugiskijr@gmail.com' # Meu email
-senha_app = 'mbmd ajap ipvb iozh' # Senha de app gerada
+senha_app = 'SUA_SENHA_DE_APP' # Senha de app gerada
 # destinatario = 'matheuswogt10@gmail.com'
 # destinatario = 'paulosergiopierdona@gmail.com'
 # destinatario = 'wesleylmb@gmail.com'
